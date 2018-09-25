@@ -8,19 +8,35 @@
       $email = $_POST['input_email'];
       $password = $_POST['input_password'];
 
+
       //ユーザー名の空チェック
       if($name == '') {
+
         $errors['name'] = 'blank';
+
       }
+
 
       //メールアドレスの空チェック
       if($email == '') {
+
         $errors['email'] = 'blank';
+
       }
 
+
       //パスワードの空チェック
+      $count = strlen($password);
+
+
       if($password == '') {
-        $errors['password'] = 'blank';
+
+         $errors['password'] = 'blank';
+
+      } elseif ($count < 4 || 16 < $count) {
+
+          $errors['password'] = 'length';
+        # code...
       }
     
 
@@ -69,6 +85,9 @@
             <input type="password" name="input_password" class="form-control" id="password" placeholder="4 ~ 16文字のパスワード">
             <?php if (isset($errors['password']) && $errors['password'] == 'blank') { ?>
               <p class="text-danger">パスワードを入力してください</p>
+            <?php } ?>
+            <?php if (isset($errors['password']) && $errors['password'] == 'length') { ?>
+              <p class="text-danger">パスワードを4~16文字で入力してください</p>
             <?php } ?>
           </div>
           <div class="form-group">
