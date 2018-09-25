@@ -1,7 +1,20 @@
 <?php
 
 
+
+    session_start();
+
+
+
+    date_default_timezone_set('Asia/Tokyo');
+
+
+
+
+
     $errors = array();
+
+
 
     if(!empty($_POST)) {
       $name = $_POST['input_name'];
@@ -46,6 +59,16 @@
       if(!empty($file_name)) {
 
         //拡張子チェックの処理
+        $file_type = substr($file_name, -3); //画像名の後ろから３文字を取得
+
+        $file_type = strtolower($file_type); //大文字が含まれていた場合全て小文字化
+
+
+        if($file_type !='jpg' && $file_type !='png' && $file_type !='gif') {
+
+          $errors['img_name'] = 'type';
+
+        }
 
       }  else {
 
@@ -53,7 +76,38 @@
 
       }
 
+
+
+          //エラーがなかった時の処理
+    if (empty($errors)) {
+
+
+    $date_str = date('YmdHis');
+
+    $submit_file_name = $date_str . $file_name;
+
+
+    move_uploaded_file($_FILES['input_img_name']['tmp_name'], '../assets/user_profile_img/' . $submit_file_name);
+
+
+
+
+    $_SESSION['register']['name'] = $_POST['input_name'];
+    $_SESSION['register']['email'] = $_POST['input_email'];
+    $_SESSION['register']['password'] = $_POST['input_password'];
+    $_SESSION['register']['img_name'] = $submit_file_name;
+
+
+    header('Location: check.php');
+    exit();
+
     }
+
+    }
+
+
+
+
 
 
 
@@ -110,6 +164,9 @@
           <input type="submit" class="btn btn-default" value="確認">
           <?php if (isset($errors['img_name']) && $errors['img_name'] == 'blank') { ?>
             <p class="text-danger">画像を選択してください</p>
+          <?php } ?>
+          <?php if(isset($errors['img_name']) && $errors['img_name'] == 'type') { ?>
+            <p class="text-danger">拡張子が「jpg」「png」「gif」の画像を選択してください</p>
           <?php } ?>
           <a href="../signin.php" style="float: right; padding-top: 6px;" class="text-success">サインイン</a>
         </form>
