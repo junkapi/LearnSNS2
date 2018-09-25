@@ -36,9 +36,22 @@
       } elseif ($count < 4 || 16 < $count) {
 
           $errors['password'] = 'length';
-        # code...
+
       }
     
+
+      //画像名を取得
+      $file_name = $_FILES['input_img_name']['name'];
+
+      if(!empty($file_name)) {
+
+        //拡張子チェックの処理
+
+      }  else {
+
+          $errors['img_name'] = 'blank';
+
+      }
 
     }
 
@@ -92,9 +105,12 @@
           </div>
           <div class="form-group">
             <label for="img_name">プロフィール画像</label>
-            <input type="file" name="input_img_name" id="img_name">
+            <input type="file" name="input_img_name" id="img_name" accept="image/*">
           </div>
           <input type="submit" class="btn btn-default" value="確認">
+          <?php if (isset($errors['img_name']) && $errors['img_name'] == 'blank') { ?>
+            <p class="text-danger">画像を選択してください</p>
+          <?php } ?>
           <a href="../signin.php" style="float: right; padding-top: 6px;" class="text-success">サインイン</a>
         </form>
       </div>
