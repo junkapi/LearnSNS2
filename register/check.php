@@ -3,10 +3,11 @@
 
 
     session_start();
+    require('../dbconnect.php');
 
 
     if (!isset($_SESSION['register'])) {
-        
+
         header('Location: signup.php');
         exit();
     }
@@ -18,6 +19,21 @@
     $password =  $_SESSION['register']['password'] ;
     $img_name = $_SESSION['register']['img_name'];
 
+
+
+    if (!empty($_POST)) {
+
+        $sql = 'INSERT INTO `users` SET `name` = ?, `email` = ?,`password` = ?,`img_name` = ?, `created` = NOW()';
+
+        $data = array($name, $email, password_hash($password, PASSWORD_DEFAULT), $img_name);
+        $stmt = $dbh->prepare($sql);
+        $stmt->execute($data);
+
+
+        unset($_SESSION['register']);
+        header('Location: ../thanks.php');
+        exit();
+    }
 
 ?>
 
